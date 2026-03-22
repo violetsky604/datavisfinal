@@ -94,6 +94,21 @@ const plotlyConfig = {
 let frames = [];
 let currentFrame = 0;
 let timer = null;
+let currentValues = {};
+let animToken = 0;
+
+function easeInOut(t) {
+  return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+}
+
+function initCurrentValues() {
+  const seen = new Set();
+  frames.forEach((f) => f.categories.forEach((c) => seen.add(c)));
+  currentValues = {};
+  seen.forEach((c) => {
+    currentValues[c] = 0;
+  });
+}
 
 function storeRange() {
   const layout = document.getElementById('chart').layout;
@@ -162,25 +177,35 @@ fetch("json/story4_data.json")
     slider.max = Math.max(0, frames.length - 1);
     buildMonthDatalist();
     buildMonthLabels();
-    renderFrame(0);
+    initCurrentValues();
+    renderFrame(0, false);
   });
 
-function renderFrame(i) {
-  currentFrame = i;
-  const f = frames[i];
-  document.getElementById("month-slider").value = i;
-
-  const trace = {
+function buildBarTrace(f, xValues) {
+  return {
     type: "bar",
     orientation: "h",
-    x: f.views_b,
+    x: xValues,
     y: f.categories,
     marker: { color: f.colors },
-    text: f.views_b.map(v => v > 0 ? v.toFixed(2) + "B" : ""),
+    text: xValues.map((v) => (v > 0 ? v.toFixed(2) + "B" : "")),
     textposition: "outside",
     textfont: { size: 10 },
     hovertemplate: "<b>%{y}</b><br>Views: %{x:.2f}B<extra></extra>",
   };
+}
+
+function renderFrame(i, animate) {
+  if (animate === undefined) animate = false;
+  currentFrame = i;
+  const f = frames[i];
+  document.getElementById("month-slider").value = i;
+
+  const targetMap = {};
+  f.categories.forEach((cat, idx) => {
+    targetMap[cat] = f.views_b[idx];
+  });
+  const targetX = f.categories.map((cat) => targetMap[cat]);
 
   const layout = {
     dragmode: false,
@@ -223,16 +248,60 @@ function renderFrame(i) {
     showlegend: false,
   };
 
-  Plotly.react("chart", [trace], layout, plotlyConfig).then(() => storeRange());
+  function applyPlot(xValues, runStoreRange) {
+    const trace = buildBarTrace(f, xValues);
+    const p = Plotly.react("chart", [trace], layout, plotlyConfig);
+    if (runStoreRange) p.then(() => storeRange());
+    return p;
+  }
+
+  if (!animate) {
+    animToken++;
+    applyPlot(targetX, true).then(() => {
+      currentValues = { ...targetMap };
+    });
+    return;
+  }
+
+  const myToken = ++animToken;
+  const startSnapshot = {};
+  f.categories.forEach((cat) => {
+    startSnapshot[cat] = currentValues[cat] ?? 0;
+  });
+
+  const duration = 600;
+  const t0 = performance.now();
+
+  function tick(now) {
+    if (myToken !== animToken) return;
+    const elapsed = now - t0;
+    const linearT = Math.min(1, elapsed / duration);
+    const e = easeInOut(linearT);
+    const xValues = f.categories.map((cat) => {
+      const from = startSnapshot[cat] ?? 0;
+      const to = targetMap[cat];
+      return from + (to - from) * e;
+    });
+    const done = linearT >= 1;
+    applyPlot(xValues, done).then(() => {
+      if (myToken !== animToken) return;
+      if (done) {
+        currentValues = { ...targetMap };
+      }
+    });
+    if (!done) requestAnimationFrame(tick);
+  }
+
+  requestAnimationFrame(tick);
 }
 
 function play() {
   if (timer) return;
   timer = setInterval(() => {
     const next = (currentFrame + 1) % frames.length;
-    renderFrame(next);
+    renderFrame(next, true);
     if (next === frames.length - 1) pause();
-  }, 900);
+  }, 1100);
 }
 
 function pause() {
@@ -242,7 +311,7 @@ function pause() {
 
 function scrub(val) {
   pause();
-  renderFrame(parseInt(val, 10));
+  renderFrame(parseInt(val, 10), false);
 }
 </script>
 

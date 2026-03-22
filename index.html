@@ -6,61 +6,447 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: system-ui, sans-serif; background: #0f1117; color: white; padding: 32px 0; }
+.side-nav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 60px;
+  background: #0f1117;
+  border-right: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 24px;
+  gap: 8px;
+  z-index: 100;
+}
+.side-nav button {
+  writing-mode: vertical-rl;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.7);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 12px 0;
+}
+.side-nav button.active { color: white; }
 .content { width: 80vw; margin-left: auto; margin-right: auto; }
 .dashboard-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 10px; flex-wrap: wrap; }
 h1 { font-size: 48px; font-weight: 700; line-height: 1.2; margin: 0; }
 .dataset-badge { flex-shrink: 0; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); font-size: 12px; padding: 4px 12px; border-radius: 20px; color: rgba(255,255,255,0.75); }
 .sub { font-size: 17px; color: rgba(255,255,255,0.5); margin-bottom: 32px; line-height: 1.45; }
+#section-intro { display: none; max-width: 640px; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.65); }
+#section-main { display: block; }
+#section-data { display: none; }
+#section-data .data-rows-range {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 12px;
+}
+#section-data .data-table-wrap {
+  max-height: calc(100vh - 300px);
+  overflow-y: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: #151923;
+}
+#section-data table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+}
+#section-data thead {
+  position: sticky;
+  top: 0;
+  background: #0f1117;
+  z-index: 10;
+}
+#section-data thead th {
+  text-align: left;
+  padding: 8px 12px;
+  background: #0f1117;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+  font-weight: 600;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+#section-data tbody td {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+#section-data tbody tr:hover td { background: rgba(255,255,255,0.04); }
+#section-data .data-loading { padding: 24px; color: rgba(255,255,255,0.45); font-size: 14px; }
+#section-data .data-pager {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+#section-data .data-pager button {
+  padding: 7px 16px;
+  font-size: 13px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: system-ui, sans-serif;
+  background: rgba(124, 58, 237, 0.15);
+  border: 1px solid #7c3aed;
+  color: rgba(255,255,255,0.85);
+}
+#section-data .data-pager button:hover:not(:disabled) {
+  background: rgba(124, 58, 237, 0.28);
+}
+#section-data .data-pager button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 0; }
+.kpi-link { display: block; text-decoration: none; color: inherit; cursor: pointer; border-radius: 12px; transition: box-shadow 0.15s ease; }
+.kpi-link:hover { box-shadow: 0 0 0 2px rgba(255,255,255,0.15); }
 .kpi { position: relative; border-radius: 12px; padding: 20px 72px 20px 20px; border-top: 4px solid; }
 .kpi .kpi-icon { position: absolute; top: 18px; right: 18px; width: 48px; height: 48px; display: block; }
 .kpi .stat { font-size: 36px; font-weight: 800; margin-bottom: 6px; }
 .kpi .label { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; }
-.kpi:nth-child(1) { background: linear-gradient(180deg, rgba(124, 106, 247, 0.08) 0%, transparent 55%), #1a1535; border-color: #7c6af7; }
-.kpi:nth-child(1) .kpi-icon { color: #7c6af7; }
-.kpi:nth-child(2) { background: linear-gradient(180deg, rgba(79, 195, 247, 0.08) 0%, transparent 55%), #0d1e2e; border-color: #4fc3f7; }
-.kpi:nth-child(2) .kpi-icon { color: #4fc3f7; }
-.kpi:nth-child(3) { background: linear-gradient(180deg, rgba(129, 199, 132, 0.08) 0%, transparent 55%), #0d1f12; border-color: #81c784; }
-.kpi:nth-child(3) .kpi-icon { color: #81c784; }
-.kpi:nth-child(4) { background: linear-gradient(180deg, rgba(255, 183, 77, 0.08) 0%, transparent 55%), #1f1a0d; border-color: #ffb74d; }
-.kpi:nth-child(4) .kpi-icon { color: #ffb74d; }
-.kpi:nth-child(5) { background: linear-gradient(180deg, rgba(240, 98, 146, 0.08) 0%, transparent 55%), #1f0d16; border-color: #f06292; }
-.kpi:nth-child(5) .kpi-icon { color: #f06292; }
+.kpi-grid > .kpi-link:nth-child(1) .kpi { background: linear-gradient(180deg, rgba(124, 106, 247, 0.08) 0%, transparent 55%), #1a1535; border-color: #7c6af7; }
+.kpi-grid > .kpi-link:nth-child(1) .kpi .kpi-icon { color: #7c6af7; }
+.kpi-grid > .kpi-link:nth-child(2) .kpi { background: linear-gradient(180deg, rgba(79, 195, 247, 0.08) 0%, transparent 55%), #0d1e2e; border-color: #4fc3f7; }
+.kpi-grid > .kpi-link:nth-child(2) .kpi .kpi-icon { color: #4fc3f7; }
+.kpi-grid > .kpi-link:nth-child(3) .kpi { background: linear-gradient(180deg, rgba(129, 199, 132, 0.08) 0%, transparent 55%), #0d1f12; border-color: #81c784; }
+.kpi-grid > .kpi-link:nth-child(3) .kpi .kpi-icon { color: #81c784; }
+.kpi-grid > .kpi-link:nth-child(4) .kpi { background: linear-gradient(180deg, rgba(255, 183, 77, 0.08) 0%, transparent 55%), #1f1a0d; border-color: #ffb74d; }
+.kpi-grid > .kpi-link:nth-child(4) .kpi .kpi-icon { color: #ffb74d; }
+.kpi-grid > .kpi-link:nth-child(5) .kpi { background: linear-gradient(180deg, rgba(240, 98, 146, 0.08) 0%, transparent 55%), #1f0d16; border-color: #f06292; }
+.kpi-grid > .kpi-link:nth-child(5) .kpi .kpi-icon { color: #f06292; }
 .kpi-charts-sep { height: 1px; background: rgba(255,255,255,0.08); margin: 40px 0 20px; border: 0; }
 .charts-section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.35); margin-bottom: 12px; margin-left: 5vw; }
 .charts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-left: 5vw; margin-right: 5vw; }
 .chart-card { background: #1e2235; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.07); text-decoration: none; display: block; transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s; }
-.chart-card img { height: 340px; width: 100%; object-fit: cover; display: block; }
 .chart-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.18); }
-.chart-preview { height: 200px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; justify-content: center; }
-.chart-preview svg { width: 48px; height: 48px; color: rgba(255,255,255,0.08); flex-shrink: 0; }
+.chart-preview { height: 200px; min-width: 0; width: 100%; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.07); display: block; position: relative; overflow: hidden; }
+.chart-preview .js-plotly-plot { cursor: default !important; }
 .chart-label { padding: 14px 16px; font-size: 18px; font-weight: 600; color: rgba(255,255,255,0.85); }
 .chart-desc { padding: 0 16px 14px; font-size: 14px; color: rgba(255,255,255,0.45); }
 </style>
 </head>
 <body>
+<nav class="side-nav" aria-label="Section navigation">
+  <button type="button" class="nav-btn" data-section="intro" onclick="showSection('intro')">Intro</button>
+  <button type="button" class="nav-btn active" data-section="main" onclick="showSection('main')">Main</button>
+  <button type="button" class="nav-btn" data-section="data" onclick="showSection('data')">Data</button>
+</nav>
 <div class="content">
 <div class="dashboard-header">
 <h1>Canadian YouTube Trends</h1>
 <span class="dataset-badge">Dataset: Nov 2017 – Jun 2018</span>
 </div>
 <p class="sub">Nov 2017 – Jun 2018 · 40,881 trending entries · 16 categories</p>
+<div id="section-main">
 <div class="kpi-grid">
-  <div class="kpi"><svg class="kpi-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11a3 3 0 003-3v-6a3 3 0 00-3-3h-4z"/><path fill="currentColor" d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg><div class="stat">5.2%</div><div class="label">Comedy like rate - 1.6× the platform average</div></div>
-  <div class="kpi"><svg class="kpi-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 20h4V10H4v10zm6 0h4V4h-4v16zm6 0h4v-8h-4v8z"/></svg><div class="stat">903</div><div class="label">Videos with massive views but minimal engagement</div></div>
-  <div class="kpi"><svg class="kpi-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13 2L3 14h7l-1 8 11-12h-7l1-8z"/></svg><div class="stat">55%</div><div class="label">Of videos hit trending within 1 day of publishing</div></div>
-  <div class="kpi"><svg class="kpi-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M8 3v3M16 3v3M6 8h12a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V10a2 2 0 012-2zM4 14h16"/></svg><div class="stat">6,194</div><div class="label">Trending entries in December 2017 - peak month</div></div>
-  <div class="kpi"><svg class="kpi-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h2v16H4V4zm4 0h12a2 2 0 012 2v12a2 2 0 01-2 2H8V4zm3 3v2h2V7h-2zm4 0v2h2V7h-2zm-4 5v2h2v-2h-2zm4 0v2h2v-2h-2zm-4 5v2h2v-2h-2zm4 0v2h2v-2h-2z"/></svg><div class="stat">13,451</div><div class="label">Entertainment entries - more than News, Comedy & Music combined</div></div>
+  <a class="kpi-link" href="story1.html"><div class="kpi"><svg class="kpi-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11a3 3 0 003-3v-6a3 3 0 00-3-3h-4z"/><path fill="currentColor" d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg><div class="stat">5.2%</div><div class="label">Comedy like rate - 1.6× the platform average</div></div></a>
+  <a class="kpi-link" href="story2.html"><div class="kpi"><svg class="kpi-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 20h4V10H4v10zm6 0h4V4h-4v16zm6 0h4v-8h-4v8z"/></svg><div class="stat">903</div><div class="label">Videos with massive views but minimal engagement</div></div></a>
+  <a class="kpi-link" href="story3.html"><div class="kpi"><svg class="kpi-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13 2L3 14h7l-1 8 11-12h-7l1-8z"/></svg><div class="stat">55%</div><div class="label">Of videos hit trending within 1 day of publishing</div></div></a>
+  <a class="kpi-link" href="story4.html"><div class="kpi"><svg class="kpi-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M8 3v3M16 3v3M6 8h12a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V10a2 2 0 012-2zM4 14h16"/></svg><div class="stat">6,194</div><div class="label">Trending entries in December 2017 - peak month</div></div></a>
+  <a class="kpi-link" href="story2.html"><div class="kpi"><svg class="kpi-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h2v16H4V4zm4 0h12a2 2 0 012 2v12a2 2 0 01-2 2H8V4zm3 3v2h2V7h-2zm4 0v2h2V7h-2zm-4 5v2h2v-2h-2zm4 0v2h2v-2h-2zm-4 5v2h2v-2h-2zm4 0v2h2v-2h-2z"/></svg><div class="stat">13,451</div><div class="label">Entertainment entries - more than News, Comedy & Music combined</div></div></a>
 </div>
 <hr class="kpi-charts-sep" aria-hidden="true">
 <p class="charts-section-label">Deep Dives</p>
 <div class="charts-grid">
-  <a class="chart-card" href="story1.html"><div class="chart-preview"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11a3 3 0 003-3v-6a3 3 0 00-3-3h-4z"/><path fill="currentColor" d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg></div><div class="chart-label">Engagement by Category</div><div class="chart-desc">Which categories get the most audience reaction?</div></a>
-  <a class="chart-card" href="story2.html"><div class="chart-preview"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 20h4V10H4v10zm6 0h4V4h-4v16zm6 0h4v-8h-4v8z"/></svg></div><div class="chart-label">Views vs Engagement</div><div class="chart-desc">Does reach equal reaction?</div></a>
-  <a class="chart-card" href="story3.html"><div class="chart-preview"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13 2L3 14h7l-1 8 11-12h-7l1-8z"/></svg></div><div class="chart-label">Publish → Trending Delay</div><div class="chart-desc">How fast do videos hit trending?</div></a>
-  <a class="chart-card" href="story4.html"><div class="chart-preview"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M8 3v3M16 3v3M6 8h12a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V10a2 2 0 012-2zM4 14h16"/></svg></div><div class="chart-label">Trending Volume by Month</div><div class="chart-desc">When does trending peak?</div></a>
+  <a class="chart-card" href="story1.html"><div class="chart-preview"><div id="thumb1" style="width:100%;height:200px;display:block"></div></div><div class="chart-label">Engagement by Category</div><div class="chart-desc">Which categories get the most audience reaction?</div></a>
+  <a class="chart-card" href="story2.html"><div class="chart-preview"><div id="thumb2" style="width:100%;height:200px;display:block"></div></div><div class="chart-label">Views vs Engagement</div><div class="chart-desc">Does reach equal reaction?</div></a>
+  <a class="chart-card" href="story3.html"><div class="chart-preview"><div id="thumb3" style="width:100%;height:200px;display:block"></div></div><div class="chart-label">Publish → Trending Delay</div><div class="chart-desc">How fast do videos hit trending?</div></a>
+  <a class="chart-card" href="story4.html"><div class="chart-preview"><div id="thumb4" style="width:100%;height:200px;display:block"></div></div><div class="chart-label">Trending Volume by Month</div><div class="chart-desc">When does trending peak?</div></a>
   
 </div>
 </div>
+<div id="section-intro">
+<div style="max-width:600px;padding:40px 0;">
+  <h2 style="font-size:22px;font-weight:600;color:#f0eeff;margin-bottom:16px;">
+  About This Dataset</h2>
+  <p style="font-size:15px;color:rgba(255,255,255,0.6);line-height:1.8;
+  margin-bottom:16px;">
+  This dashboard explores 40,881 trending video entries from YouTube Canada, 
+  spanning November 2017 to June 2018 across 16 categories. The dataset 
+  captures what Canadians were watching, liking, and engaging with at scale.
+  </p>
+  <p style="font-size:15px;color:rgba(255,255,255,0.6);line-height:1.8;">
+  Each entry represents a video that appeared on the Canadian trending page, 
+  including view counts, engagement rates, publish dates, and category tags. 
+  The goal is to surface patterns in what drives visibility — and whether 
+  reach actually equals reaction.
+  </p>
+</div>
+</div>
+<div id="section-data">
+  <p class="data-rows-range" id="data-rows-range" hidden>Rows — of —</p>
+  <div class="data-table-wrap" id="data-table-container">
+    <p class="data-loading" id="data-table-status">Open this section to load the dataset.</p>
+  </div>
+  <div class="data-pager" id="data-pager" hidden>
+    <button type="button" id="data-prev">Previous</button>
+    <button type="button" id="data-next">Next</button>
+  </div>
+</div>
+</div>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<script>
+function showSection(which) {
+  const intro = document.getElementById('section-intro');
+  const main = document.getElementById('section-main');
+  const data = document.getElementById('section-data');
+  intro.style.display = which === 'intro' ? 'block' : 'none';
+  main.style.display = which === 'main' ? 'block' : 'none';
+  data.style.display = which === 'data' ? 'block' : 'none';
+  document.querySelectorAll('.side-nav .nav-btn').forEach(function (btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-section') === which);
+  });
+  if (which === 'data') loadDataCsvOnce();
+}
+
+function formatCellValue(key, val) {
+  if (val === null || val === undefined) return '';
+  if (typeof val === 'number') {
+    if (key === 'like_rate' || key === 'dislike_rate') return val.toFixed(2) + '%';
+    return String(val);
+  }
+  return String(val);
+}
+
+function headerLabel(key) {
+  return key.replace(/_/g, ' ');
+}
+
+var dataCsvLoaded = false;
+var dataCsvLoading = false;
+var dataTableRows = [];
+var dataTableHeaders = [];
+var dataTablePage = 0;
+var DATA_PAGE_SIZE = 100;
+var DATA_CSV_URL = 'csv/CAvideos_comments_removed.csv';
+
+function parseCSV(text) {
+  var s = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  var rows = [];
+  var row = [];
+  var field = '';
+  var i = 0;
+  var inQuotes = false;
+  while (i < s.length) {
+    var c = s[i];
+    if (inQuotes) {
+      if (c === '"') {
+        if (s[i + 1] === '"') {
+          field += '"';
+          i += 2;
+          continue;
+        }
+        inQuotes = false;
+        i++;
+        continue;
+      }
+      field += c;
+      i++;
+      continue;
+    }
+    if (c === '"') {
+      inQuotes = true;
+      i++;
+      continue;
+    }
+    if (c === ',') {
+      row.push(field);
+      field = '';
+      i++;
+      continue;
+    }
+    if (c === '\n') {
+      row.push(field);
+      rows.push(row);
+      row = [];
+      field = '';
+      i++;
+      continue;
+    }
+    field += c;
+    i++;
+  }
+  row.push(field);
+  if (row.length > 1 || row[0] !== '') rows.push(row);
+  return rows;
+}
+
+function rowsToObjects(header, dataRows) {
+  return dataRows.map(function (cells) {
+    var o = {};
+    for (var h = 0; h < header.length; h++) {
+      o[header[h]] = cells[h] !== undefined ? cells[h] : '';
+    }
+    return o;
+  });
+}
+
+function renderDataTablePage() {
+  var rangeEl = document.getElementById('data-rows-range');
+  var wrap = document.getElementById('data-table-container');
+  var pager = document.getElementById('data-pager');
+  var prevBtn = document.getElementById('data-prev');
+  var nextBtn = document.getElementById('data-next');
+  var total = dataTableRows.length;
+  var start = dataTablePage * DATA_PAGE_SIZE;
+  var slice = dataTableRows.slice(start, start + DATA_PAGE_SIZE);
+  var end = start + slice.length;
+  rangeEl.textContent = 'Rows ' + (total ? start + 1 : 0) + '–' + end + ' of ' + total;
+  rangeEl.hidden = false;
+  pager.hidden = false;
+  prevBtn.disabled = dataTablePage <= 0;
+  nextBtn.disabled = start + DATA_PAGE_SIZE >= total;
+  var existing = wrap.querySelector('table');
+  if (existing) existing.remove();
+  var table = document.createElement('table');
+  var thead = document.createElement('thead');
+  var trh = document.createElement('tr');
+  dataTableHeaders.forEach(function (k) {
+    var th = document.createElement('th');
+    th.textContent = headerLabel(k);
+    trh.appendChild(th);
+  });
+  thead.appendChild(trh);
+  var tbody = document.createElement('tbody');
+  slice.forEach(function (row) {
+    var tr = document.createElement('tr');
+    dataTableHeaders.forEach(function (k) {
+      var td = document.createElement('td');
+      td.textContent = formatCellValue(k, row[k]);
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  table.appendChild(thead);
+  table.appendChild(tbody);
+  wrap.appendChild(table);
+  wrap.scrollTop = 0;
+}
+
+function loadDataCsvOnce() {
+  if (dataCsvLoaded || dataCsvLoading) return;
+  dataCsvLoading = true;
+  var status = document.getElementById('data-table-status');
+  var wrap = document.getElementById('data-table-container');
+  if (status) {
+    status.textContent = 'Loading data…';
+    status.hidden = false;
+  }
+  fetch(DATA_CSV_URL)
+    .then(function (r) {
+      if (!r.ok) throw new Error('fetch failed');
+      return r.text();
+    })
+    .then(function (text) {
+      var matrix = parseCSV(text);
+      if (!matrix.length) throw new Error('empty');
+      dataTableHeaders = matrix[0];
+      dataTableRows = rowsToObjects(dataTableHeaders, matrix.slice(1));
+      dataCsvLoaded = true;
+      dataTablePage = 0;
+      if (status) status.remove();
+      renderDataTablePage();
+    })
+    .catch(function () {
+      if (status) status.textContent = 'Could not load data.';
+      var rangeEl = document.getElementById('data-rows-range');
+      var pager = document.getElementById('data-pager');
+      if (rangeEl) rangeEl.hidden = true;
+      if (pager) pager.hidden = true;
+    })
+    .then(function () {
+      dataCsvLoading = false;
+    });
+}
+
+document.getElementById('data-prev').addEventListener('click', function () {
+  if (dataTablePage <= 0) return;
+  dataTablePage--;
+  renderDataTablePage();
+});
+document.getElementById('data-next').addEventListener('click', function () {
+  if ((dataTablePage + 1) * DATA_PAGE_SIZE >= dataTableRows.length) return;
+  dataTablePage++;
+  renderDataTablePage();
+});
+
+const thumbConfig = {
+  staticPlot: true,
+  responsive: true,
+  displayModeBar: false,
+  scrollZoom: false,
+  doubleClick: false,
+};
+const axisOff = {
+  visible: true,
+  showticklabels: false,
+  showgrid: false,
+  zeroline: false,
+  showline: false,
+  ticks: '',
+  title: { text: '' },
+  fixedrange: true,
+  automargin: false,
+};
+const thumbLayout = {
+  margin: { l: 0, r: 0, t: 0, b: 0 },
+  paper_bgcolor: 'transparent',
+  plot_bgcolor: 'transparent',
+  xaxis: { ...axisOff },
+  yaxis: { ...axisOff },
+  showlegend: false,
+  hovermode: false,
+  height: 200,
+  width: null,
+  autosize: true,
+};
+
+fetch('json/story1_data.json').then(r=>r.json()).then(data=>{
+  const d = data.filter ? data : data;
+  Plotly.newPlot('thumb1', [{
+    type:'bar', orientation:'h',
+    x: d.map(d=>d.like_rate),
+    y: d.map(d=>d.category),
+    marker:{color:'#93C5FD'}
+  }], {...thumbLayout}, thumbConfig);
+}).catch(function () {});
+
+fetch('json/story2_data.json').then(r=>r.json()).then(json=>{
+  Plotly.newPlot('thumb2', [{
+    type:'scatter', mode:'markers',
+    x: json.data.map(d=>d.total_views_b),
+    y: json.data.map(d=>d.avg_engagement_pct),
+    marker:{ size: json.data.map(d=>d.bubble_size), color: json.data.map(d=>d.color), opacity:0.85 }
+  }], {...thumbLayout}, thumbConfig);
+});
+
+fetch('json/story3_data.json').then(r=>r.json()).then(data=>{
+  Plotly.newPlot('thumb3', [{
+    type:'scatter', mode:'lines', fill:'tozeroy',
+    x: data.map(d=>d.days_to_trend),
+    y: data.map(d=>d.median_views),
+    line:{color:'#C2410C', width:2},
+    fillcolor:'rgba(251,146,60,0.3)'
+  }], {...thumbLayout}, thumbConfig);
+});
+
+fetch('json/story4_data.json').then(r=>r.json()).then(data=>{
+  const first = data[data.length-1];
+  Plotly.newPlot('thumb4', [{
+    type:'bar', orientation:'h',
+    x: first.views_b,
+    y: first.categories,
+    marker:{color: first.colors}
+  }], {...thumbLayout}, thumbConfig);
+});
+</script>
 </body>
 </html>
