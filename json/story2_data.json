@@ -1,0 +1,125 @@
+{
+  "avg_engagement_mean": 3.7540796284576987,
+  "data": [
+    {
+      "category": "Autos & Vehicles",
+      "num_videos": 353,
+      "bubble_size": 12.099472158203852,
+      "color": "#A78BFA",
+      "total_views_b": 0.200066074,
+      "avg_engagement_pct": 3.2294392208115115
+    },
+    {
+      "category": "Comedy",
+      "num_videos": 3773,
+      "bubble_size": 32.43996728867742,
+      "color": "#5B21B6",
+      "total_views_b": 3.708438785,
+      "avg_engagement_pct": 5.195657783820109
+    },
+    {
+      "category": "Education",
+      "num_videos": 991,
+      "bubble_size": 15.8939855772805,
+      "color": "#5B21B6",
+      "total_views_b": 0.531773343,
+      "avg_engagement_pct": 4.402872811351339
+    },
+    {
+      "category": "Entertainment",
+      "num_videos": 13451,
+      "bubble_size": 90.0,
+      "color": "#A78BFA",
+      "total_views_b": 13.671215509,
+      "avg_engagement_pct": 2.6827917527109313
+    },
+    {
+      "category": "Film & Animation",
+      "num_videos": 2060,
+      "bubble_size": 22.2518771838525,
+      "color": "#A78BFA",
+      "total_views_b": 2.939060844,
+      "avg_engagement_pct": 2.943492591646462
+    },
+    {
+      "category": "Gaming",
+      "num_videos": 1344,
+      "bubble_size": 17.99345773548435,
+      "color": "#5B21B6",
+      "total_views_b": 1.241532385,
+      "avg_engagement_pct": 4.949787600291095
+    },
+    {
+      "category": "Howto & Style",
+      "num_videos": 2007,
+      "bubble_size": 21.93665898446212,
+      "color": "#5B21B6",
+      "total_views_b": 1.570846611,
+      "avg_engagement_pct": 5.032803938171346
+    },
+    {
+      "category": "Music",
+      "num_videos": 3731,
+      "bubble_size": 32.19017173444354,
+      "color": "#5B21B6",
+      "total_views_b": 13.179850194,
+      "avg_engagement_pct": 4.8561564874292635
+    },
+    {
+      "category": "News & Politics",
+      "num_videos": 4159,
+      "bubble_size": 34.73570738235075,
+      "color": "#DDD6FE",
+      "total_views_b": 1.614610043,
+      "avg_engagement_pct": 2.204685262524819
+    },
+    {
+      "category": "Nonprofits & Activism",
+      "num_videos": 74,
+      "bubble_size": 10.440115976507323,
+      "color": "#5B21B6",
+      "total_views_b": 0.115601623,
+      "avg_engagement_pct": 4.090819627389982
+    },
+    {
+      "category": "People & Blogs",
+      "num_videos": 4105,
+      "bubble_size": 34.41454166976433,
+      "color": "#A78BFA",
+      "total_views_b": 3.228227926,
+      "avg_engagement_pct": 3.087093879986534
+    },
+    {
+      "category": "Pets & Animals",
+      "num_videos": 369,
+      "bubble_size": 12.19463236934057,
+      "color": "#5B21B6",
+      "total_views_b": 0.235592173,
+      "avg_engagement_pct": 4.630205010912206
+    },
+    {
+      "category": "Science & Technology",
+      "num_videos": 1155,
+      "bubble_size": 16.86937774143186,
+      "color": "#5B21B6",
+      "total_views_b": 1.425090421,
+      "avg_engagement_pct": 4.110416804034536
+    },
+    {
+      "category": "Sports",
+      "num_videos": 2787,
+      "bubble_size": 26.575719277377146,
+      "color": "#DDD6FE",
+      "total_views_b": 2.997652188,
+      "avg_engagement_pct": 1.5961675169291367
+    },
+    {
+      "category": "Travel & Events",
+      "num_videos": 392,
+      "bubble_size": 12.331425172849602,
+      "color": "#A78BFA",
+      "total_views_b": 0.143746952,
+      "avg_engagement_pct": 3.2988041388562066
+    }
+  ]
+}

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Trending Wars: Which Category Rules Each Month?</title>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <style>
+    body { font-family: Inter, sans-serif; background: white; margin: 0; padding: 52px 60px 40px 60px; }
+    #control-bar button {
+      padding: 6px 16px; font-size: 13px; font-family: Inter, sans-serif;
+      border-radius: 4px; cursor: pointer;
+      background: #F5F3FF; border: 1px solid #7C3AED; color: #374151;
+    }
+    #control-bar button:hover { background: #7C3AED; color: white; }
+    #month-slider { accent-color: #7C3AED; }
+    #plot-toolbar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-top: 16px;
+      padding: 12px 24px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .toolbar-label {
+      font-size: 11px;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-right: 8px;
+    }
+    #plot-toolbar button {
+      padding: 7px 16px;
+      font-size: 13px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: Inter, sans-serif;
+      border: 1px solid;
+    }
+    .btn-chart-action {
+      background: white;
+      border-color: #d1d5db;
+      color: #374151;
+    }
+    .btn-chart-action:hover {
+      background: #f3f4f6;
+    }
+  </style>
+</head>
+<body>
+
+<a href="index.html" style="position:fixed;top:16px;left:16px;padding:6px 14px;font-size:13px;font-family:Inter,sans-serif;background:#F5F3FF;border:1px solid #7C3AED;color:#374151;border-radius:4px;text-decoration:none;z-index:999;">← Back</a>
+
+<div id="chart"></div>
+
+<div id="plot-toolbar">
+  <div class="toolbar-group">
+    <span class="toolbar-label">Chart</span>
+    <button type="button" class="btn-chart-action" onclick="zoomOut()">－ Zoom Out</button>
+    <button type="button" class="btn-chart-action" onclick="zoomIn()">Zoom In</button>
+  </div>
+</div>
+
+<div id="control-bar" style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:16px;padding:16px 24px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;width:fit-content;margin-left:auto;margin-right:auto;">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;">
+    <input id="month-slider" type="range" min="0" value="0" list="month-ticks" style="width:700px;" oninput="scrub(this.value)" />
+    <div id="month-labels" style="display:flex;justify-content:space-between;width:700px;margin-top:4px;"></div>
+    <datalist id="month-ticks"></datalist>
+  </div>
+  <div style="display:flex;gap:8px;">
+    <button type="button" onclick="play()">&#9654; Play</button>
+    <button type="button" onclick="pause()">&#9646;&#9646; Pause</button>
+  </div>
+</div>
+
+<script>
+const plotlyConfig = {
+  responsive: true,
+  displayModeBar: false,
+  displaylogo: false,
+};
+
+let frames = [];
+let currentFrame = 0;
+let timer = null;
+
+function storeRange() {
+  const layout = document.getElementById('chart').layout;
+  defaultRange = {
+    x: [...layout.xaxis.range],
+    y: [...layout.yaxis.range]
+  };
+  zoomedOut = false;
+}
+let defaultRange = null;
+let zoomedOut = false;
+
+function zoomOut() {
+  if (!defaultRange) return;
+  const xPad = (defaultRange.x[1] - defaultRange.x[0]) * 0.4;
+  const yPad = (defaultRange.y[1] - defaultRange.y[0]) * 0.4;
+  Plotly.relayout('chart', {
+    'xaxis.range': [defaultRange.x[0] - xPad, defaultRange.x[1] + xPad],
+    'yaxis.range': [defaultRange.y[0] - yPad, defaultRange.y[1] + yPad]
+  });
+  zoomedOut = true;
+}
+
+function zoomIn() {
+  if (!defaultRange) return;
+  Plotly.relayout('chart', {
+    'xaxis.range': defaultRange.x,
+    'yaxis.range': defaultRange.y
+  });
+  zoomedOut = false;
+}
+
+function buildMonthDatalist() {
+  const dl = document.getElementById("month-ticks");
+  dl.innerHTML = "";
+  frames.forEach((f, i) => {
+    const opt = document.createElement("option");
+    opt.value = String(i);
+    if (i % 2 === 0) {
+      opt.label = f.label;
+    }
+    dl.appendChild(opt);
+  });
+}
+
+function buildMonthLabels() {
+  const row = document.getElementById("month-labels");
+  row.innerHTML = "";
+  frames.forEach((f, i) => {
+    const span = document.createElement("span");
+    span.style.fontSize = "11px";
+    span.style.color = "#9ca3af";
+    span.style.flex = "1";
+    span.style.textAlign = "center";
+    span.style.minWidth = "0";
+    span.textContent = i % 2 === 0 ? f.label : "";
+    row.appendChild(span);
+  });
+}
+
+fetch("json/story4_data.json")
+  .then(r => r.json())
+  .then(data => {
+    frames = data;
+    const slider = document.getElementById("month-slider");
+    slider.max = Math.max(0, frames.length - 1);
+    buildMonthDatalist();
+    buildMonthLabels();
+    renderFrame(0);
+  });
+
+function renderFrame(i) {
+  currentFrame = i;
+  const f = frames[i];
+  document.getElementById("month-slider").value = i;
+
+  const trace = {
+    type: "bar",
+    orientation: "h",
+    x: f.views_b,
+    y: f.categories,
+    marker: { color: f.colors },
+    text: f.views_b.map(v => v > 0 ? v.toFixed(2) + "B" : ""),
+    textposition: "outside",
+    textfont: { size: 10 },
+    hovertemplate: "<b>%{y}</b><br>Views: %{x:.2f}B<extra></extra>",
+  };
+
+  const layout = {
+    dragmode: false,
+    title: {
+      text: "<b>The Trending Wars: Which Category Rules Each Month?</b><br>" +
+            "<sup>Total views by category, Nov 2017 – Jun 2018</sup>",
+      font: { family: "Inter, sans-serif", size: 24, color: "#1e1b4b" },
+      x: 0.05,
+      pad: { t: 20 },
+    },
+    xaxis: {
+      title: {
+        text: "Total Views (Billions)",
+        font: { size: 14 },
+      },
+      range: [0, 3.5],
+      gridcolor: "#f3f4f6",
+      tickfont: { size: 13 },
+      ticksuffix: "B",
+    },
+    yaxis: {
+      title: "",
+      tickfont: { size: 13 },
+    },
+    annotations: [{
+      x: 0.98, y: 0.02,
+      xref: "paper", yref: "paper",
+      text: "<b>" + f.label + "</b>",
+      showarrow: false,
+      font: { size: 28, color: "#DDD6FE" },
+      xanchor: "right",
+      yanchor: "bottom",
+    }],
+    plot_bgcolor: "white",
+    paper_bgcolor: "white",
+    height: 650,
+    margin: { l: 200, r: 100, t: 180, b: 80 },
+    font: { family: "Inter, sans-serif", color: "#374151" },
+    hoverlabel: { bgcolor: "white", font: { size: 13 } },
+    showlegend: false,
+  };
+
+  Plotly.react("chart", [trace], layout, plotlyConfig).then(() => storeRange());
+}
+
+function play() {
+  if (timer) return;
+  timer = setInterval(() => {
+    const next = (currentFrame + 1) % frames.length;
+    renderFrame(next);
+    if (next === frames.length - 1) pause();
+  }, 900);
+}
+
+function pause() {
+  clearInterval(timer);
+  timer = null;
+}
+
+function scrub(val) {
+  pause();
+  renderFrame(parseInt(val, 10));
+}
+</script>
+
+<div style="margin:0 auto 48px auto;max-width:800px;position:fixed;bottom:0;left:0;right:0;background:white;padding:20px 0;z-index:100;">
+  <p style="font-size:11px;text-transform:uppercase;letter-spacing:0.12em;
+  color:#9ca3af;margin-bottom:12px;text-align:center;display:block;">More Stories</p>
+  <div style="display:flex;justify-content:center;gap:40px;">
+    <a href="story1.html" style="text-decoration:none;background:#f9fafb;
+    border:1px solid #e5e7eb;border-radius:8px;width:220px;overflow:hidden;
+    display:block;">
+      <div style="height:80px;display:flex;align-items:center;
+      justify-content:center;"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:48px;height:48px;color:#7c6af7;flex-shrink:0;"><path fill="currentColor" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11a3 3 0 003-3v-6a3 3 0 00-3-3h-4z"/><path fill="currentColor" d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg></div>
+      <div style="padding:8px 12px;font-size:14px;font-weight:600;
+      color:#374151;">Engagement by Category</div>
+      <div style="padding:0 12px 10px;font-size:12px;color:#9ca3af;">
+      Which categories get the most audience reaction?</div>
+    </a>
+    <a href="story2.html" style="text-decoration:none;background:#f9fafb;
+    border:1px solid #e5e7eb;border-radius:8px;width:220px;overflow:hidden;
+    display:block;">
+      <div style="height:80px;display:flex;align-items:center;
+      justify-content:center;"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:48px;height:48px;color:#4fc3f7;flex-shrink:0;"><path fill="currentColor" d="M4 20h4V10H4v10zm6 0h4V4h-4v16zm6 0h4v-8h-4v8z"/></svg></div>
+      <div style="padding:8px 12px;font-size:14px;font-weight:600;
+      color:#374151;">Views vs Engagement</div>
+      <div style="padding:0 12px 10px;font-size:12px;color:#9ca3af;">
+      Does reach equal reaction?</div>
+    </a>
+    <a href="story3.html" style="text-decoration:none;background:#f9fafb;
+    border:1px solid #e5e7eb;border-radius:8px;width:220px;overflow:hidden;
+    display:block;">
+      <div style="height:80px;display:flex;align-items:center;
+      justify-content:center;"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:48px;height:48px;color:#81c784;flex-shrink:0;"><path fill="currentColor" d="M13 2L3 14h7l-1 8 11-12h-7l1-8z"/></svg></div>
+      <div style="padding:8px 12px;font-size:14px;font-weight:600;
+      color:#374151;">Publish → Trending Delay</div>
+      <div style="padding:0 12px 10px;font-size:12px;color:#9ca3af;">
+      How fast do videos hit trending?</div>
+    </a>
+  </div>
+</div>
+
+</body>
+</html>

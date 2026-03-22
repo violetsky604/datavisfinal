@@ -1,0 +1,92 @@
+[
+  {
+    "category": "Pets & Animals",
+    "like_rate": 3.7483146776697036,
+    "dislike_rate": 0.07852680233141701,
+    "count": 369
+  },
+  {
+    "category": "Travel & Events",
+    "like_rate": 2.6093868063372923,
+    "dislike_rate": 0.09034000247880039,
+    "count": 392
+  },
+  {
+    "category": "Autos & Vehicles",
+    "like_rate": 2.3652755839053454,
+    "dislike_rate": 0.09885534116094066,
+    "count": 353
+  },
+  {
+    "category": "Film & Animation",
+    "like_rate": 2.6471722475167647,
+    "dislike_rate": 0.10585895172437608,
+    "count": 2060
+  },
+  {
+    "category": "Sports",
+    "like_rate": 1.9831993597517392,
+    "dislike_rate": 0.10963143133001793,
+    "count": 2787
+  },
+  {
+    "category": "Howto & Style",
+    "like_rate": 3.2583132968926143,
+    "dislike_rate": 0.11016479826113333,
+    "count": 2007
+  },
+  {
+    "category": "Science & Technology",
+    "like_rate": 3.004342557432712,
+    "dislike_rate": 0.12568697211108404,
+    "count": 1155
+  },
+  {
+    "category": "Comedy",
+    "like_rate": 5.286501554049517,
+    "dislike_rate": 0.14487268933037006,
+    "count": 3773
+  },
+  {
+    "category": "Education",
+    "like_rate": 3.943861097226906,
+    "dislike_rate": 0.14920793049229622,
+    "count": 991
+  },
+  {
+    "category": "Music",
+    "like_rate": 4.282655126512434,
+    "dislike_rate": 0.16766647325065948,
+    "count": 3731
+  },
+  {
+    "category": "Entertainment",
+    "like_rate": 2.8325603728876163,
+    "dislike_rate": 0.1886561073009269,
+    "count": 13451
+  },
+  {
+    "category": "Gaming",
+    "like_rate": 4.1663473804591895,
+    "dislike_rate": 0.19708563623171216,
+    "count": 1344
+  },
+  {
+    "category": "News & Politics",
+    "like_rate": 2.0255698359978553,
+    "dislike_rate": 0.20215661448106081,
+    "count": 4159
+  },
+  {
+    "category": "People & Blogs",
+    "like_rate": 3.264594892795683,
+    "dislike_rate": 0.29368421986694626,
+    "count": 4105
+  },
+  {
+    "category": "Nonprofits & Activism",
+    "like_rate": 8.860267472196302,
+    "dislike_rate": 2.011915524750029,
+    "count": 74
+  }
+]

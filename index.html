@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Canadian YouTube Trends 2017</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: system-ui, sans-serif; background: #0f1117; color: white; padding: 32px 0; }
+.content { width: 80vw; margin-left: auto; margin-right: auto; }
+.dashboard-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 10px; flex-wrap: wrap; }
+h1 { font-size: 48px; font-weight: 700; line-height: 1.2; margin: 0; }
+.dataset-badge { flex-shrink: 0; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); font-size: 12px; padding: 4px 12px; border-radius: 20px; color: rgba(255,255,255,0.75); }
+.sub { font-size: 17px; color: rgba(255,255,255,0.5); margin-bottom: 32px; line-height: 1.45; }
+.kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 0; }
+.kpi { position: relative; border-radius: 12px; padding: 20px 72px 20px 20px; border-top: 4px solid; }
+.kpi .kpi-icon { position: absolute; top: 18px; right: 18px; width: 48px; height: 48px; display: block; }
+.kpi .stat { font-size: 36px; font-weight: 800; margin-bottom: 6px; }
+.kpi .label { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+.kpi:nth-child(1) { background: linear-gradient(180deg, rgba(124, 106, 247, 0.08) 0%, transparent 55%), #1a1535; border-color: #7c6af7; }
+.kpi:nth-child(1) .kpi-icon { color: #7c6af7; }
+.kpi:nth-child(2) { background: linear-gradient(180deg, rgba(79, 195, 247, 0.08) 0%, transparent 55%), #0d1e2e; border-color: #4fc3f7; }
+.kpi:nth-child(2) .kpi-icon { color: #4fc3f7; }
+.kpi:nth-child(3) { background: linear-gradient(180deg, rgba(129, 199, 132, 0.08) 0%, transparent 55%), #0d1f12; border-color: #81c784; }
+.kpi:nth-child(3) .kpi-icon { color: #81c784; }
+.kpi:nth-child(4) { background: linear-gradient(180deg, rgba(255, 183, 77, 0.08) 0%, transparent 55%), #1f1a0d; border-color: #ffb74d; }
+.kpi:nth-child(4) .kpi-icon { color: #ffb74d; }
+.kpi:nth-child(5) { background: linear-gradient(180deg, rgba(240, 98, 146, 0.08) 0%, transparent 55%), #1f0d16; border-color: #f06292; }
+.kpi:nth-child(5) .kpi-icon { color: #f06292; }
+.kpi-charts-sep { height: 1px; background: rgba(255,255,255,0.08); margin: 40px 0 20px; border: 0; }
+.charts-section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.35); margin-bottom: 12px; margin-left: 5vw; }
+.charts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-left: 5vw; margin-right: 5vw; }
+.chart-card { background: #1e2235; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.07); text-decoration: none; display: block; transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s; }
+.chart-card img { height: 340px; width: 100%; object-fit: cover; display: block; }
+.chart-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.18); }
+.chart-preview { height: 200px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; justify-content: center; }
+.chart-preview svg { width: 48px; height: 48px; color: rgba(255,255,255,0.08); flex-shrink: 0; }
+.chart-label { padding: 14px 16px; font-size: 18px; font-weight: 600; color: rgba(255,255,255,0.85); }
+.chart-desc { padding: 0 16px 14px; font-size: 14px; color: rgba(255,255,255,0.45); }
+</style>
+</head>
+<body>
+<div class="content">
+<div class="dashboard-header">
+<h1>Canadian YouTube Trends</h1>
+<span class="dataset-badge">Dataset: Nov 2017 – Jun 2018</span>
+</div>
+<p class="sub">Nov 2017 – Jun 2018 · 40,881 trending entries · 16 categories</p>
+<div class="kpi-grid">
+  <div class="kpi"><svg class="kpi-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11a3 3 0 003-3v-6a3 3 0 00-3-3h-4z"/><path fill="currentColor" d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg><div class="stat">5.2%</div><div class="label">Comedy like rate - 1.6× the platform average</div></div>
+  <div class="kpi"><svg class="kpi-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 20h4V10H4v10zm6 0h4V4h-4v16zm6 0h4v-8h-4v8z"/></svg><div class="stat">903</div><div class="label">Videos with massive views but minimal engagement</div></div>
+  <div class="kpi"><svg class="kpi-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13 2L3 14h7l-1 8 11-12h-7l1-8z"/></svg><div class="stat">55%</div><div class="label">Of videos hit trending within 1 day of publishing</div></div>
+  <div class="kpi"><svg class="kpi-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M8 3v3M16 3v3M6 8h12a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V10a2 2 0 012-2zM4 14h16"/></svg><div class="stat">6,194</div><div class="label">Trending entries in December 2017 - peak month</div></div>
+  <div class="kpi"><svg class="kpi-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h2v16H4V4zm4 0h12a2 2 0 012 2v12a2 2 0 01-2 2H8V4zm3 3v2h2V7h-2zm4 0v2h2V7h-2zm-4 5v2h2v-2h-2zm4 0v2h2v-2h-2zm-4 5v2h2v-2h-2zm4 0v2h2v-2h-2z"/></svg><div class="stat">13,451</div><div class="label">Entertainment entries - more than News, Comedy & Music combined</div></div>
+</div>
+<hr class="kpi-charts-sep" aria-hidden="true">
+<p class="charts-section-label">Deep Dives</p>
+<div class="charts-grid">
+  <a class="chart-card" href="story1.html"><div class="chart-preview"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11a3 3 0 003-3v-6a3 3 0 00-3-3h-4z"/><path fill="currentColor" d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg></div><div class="chart-label">Engagement by Category</div><div class="chart-desc">Which categories get the most audience reaction?</div></a>
+  <a class="chart-card" href="story2.html"><div class="chart-preview"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 20h4V10H4v10zm6 0h4V4h-4v16zm6 0h4v-8h-4v8z"/></svg></div><div class="chart-label">Views vs Engagement</div><div class="chart-desc">Does reach equal reaction?</div></a>
+  <a class="chart-card" href="story3.html"><div class="chart-preview"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13 2L3 14h7l-1 8 11-12h-7l1-8z"/></svg></div><div class="chart-label">Publish → Trending Delay</div><div class="chart-desc">How fast do videos hit trending?</div></a>
+  <a class="chart-card" href="story4.html"><div class="chart-preview"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M8 3v3M16 3v3M6 8h12a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V10a2 2 0 012-2zM4 14h16"/></svg></div><div class="chart-label">Trending Volume by Month</div><div class="chart-desc">When does trending peak?</div></a>
+  
+</div>
+</div>
+</body>
+</html>
