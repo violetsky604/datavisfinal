@@ -5,7 +5,16 @@
   <title>The Sweet Spot: When Videos Hit Their Peak</title>
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
   <style>
-    body { font-family: Inter, sans-serif; background: white; margin: 0; padding: 52px 60px 40px 60px; }
+    body {
+      font-family: Inter, sans-serif;
+      background-color: #fbfaff;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 420'%3E%3Crect x='70' y='90' width='500' height='240' rx='64' fill='%237c3aed' fill-opacity='0.045'/%3E%3Cpath d='M285 165L285 255L375 210Z' fill='%237c3aed' fill-opacity='0.07'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: min(66vw, 700px) auto;
+      margin: 0;
+      padding: 52px 60px 40px 60px;
+    }
     #plot-toolbar {
       display: flex;
       justify-content: center;
@@ -13,7 +22,7 @@
       gap: 20px;
       margin-top: 16px;
       padding: 12px 24px;
-      background: #f9fafb;
+      background: white;
       border: 1px solid #e5e7eb;
       border-radius: 10px;
       width: fit-content;
@@ -53,7 +62,11 @@
 </head>
 <body>
 
-<a href="index.html" style="position:fixed;top:16px;left:16px;padding:6px 14px;font-size:13px;font-family:Inter,sans-serif;background:#F5F3FF;border:1px solid #7C3AED;color:#374151;border-radius:4px;text-decoration:none;z-index:999;">← Back</a>
+<a href="story2.html" style="position:fixed;top:16px;left:calc(50% - 200px);transform:translateX(-50%);padding:6px 14px;font-size:13px;font-family:Inter,sans-serif;background:white;border:1px solid #7C3AED;color:#374151;border-radius:4px;text-decoration:none;z-index:999;">← Back</a>
+
+<a href="index.html" style="position:fixed;top:16px;left:50%;transform:translateX(-50%);padding:6px 14px;font-size:13px;font-family:Inter,sans-serif;background:white;border:1px solid #7C3AED;color:#374151;border-radius:4px;text-decoration:none;z-index:999;">Home</a>
+
+<a href="story4.html" style="position:fixed;top:16px;left:calc(50% + 200px);transform:translateX(-50%);padding:6px 14px;font-size:13px;font-family:Inter,sans-serif;background:white;border:1px solid #7C3AED;color:#374151;border-radius:4px;text-decoration:none;z-index:999;">Next -&gt;</a>
 
 <div id="chart"></div>
 
@@ -214,11 +227,11 @@ fetch("json/story3_data.json")
   });
 </script>
 
-<div style="margin:0 auto 48px auto;max-width:800px;position:fixed;bottom:0;left:0;right:0;background:white;padding:20px 0;z-index:100;">
+<div style="margin:40px auto 100px auto;max-width:800px;">
   <p style="font-size:11px;text-transform:uppercase;letter-spacing:0.12em;
   color:#9ca3af;margin-bottom:12px;text-align:center;display:block;">More Stories</p>
   <div style="display:flex;justify-content:center;gap:40px;">
-    <a href="story1.html" style="text-decoration:none;background:#f9fafb;
+    <a href="story1.html" style="text-decoration:none;background:white;
     border:1px solid #e5e7eb;border-radius:8px;width:220px;overflow:hidden;
     display:block;">
       <div style="height:80px;display:flex;align-items:center;
@@ -228,7 +241,7 @@ fetch("json/story3_data.json")
       <div style="padding:0 12px 10px;font-size:12px;color:#9ca3af;">
       Which categories get the most audience reaction?</div>
     </a>
-    <a href="story2.html" style="text-decoration:none;background:#f9fafb;
+    <a href="story2.html" style="text-decoration:none;background:white;
     border:1px solid #e5e7eb;border-radius:8px;width:220px;overflow:hidden;
     display:block;">
       <div style="height:80px;display:flex;align-items:center;
@@ -238,7 +251,7 @@ fetch("json/story3_data.json")
       <div style="padding:0 12px 10px;font-size:12px;color:#9ca3af;">
       Does reach equal reaction?</div>
     </a>
-    <a href="story4.html" style="text-decoration:none;background:#f9fafb;
+    <a href="story4.html" style="text-decoration:none;background:white;
     border:1px solid #e5e7eb;border-radius:8px;width:220px;overflow:hidden;
     display:block;">
       <div style="height:80px;display:flex;align-items:center;
